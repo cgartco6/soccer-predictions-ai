@@ -1,0 +1,13 @@
+webhooks:
+  - name: "data-update"
+    url: "https://api.soccer-predictions.com/webhook/data-update"
+    events: ["data.refreshed", "model.retrained"]
+    secret: "${WEBHOOK_SECRET}"
+    
+  - name: "prediction-alert"
+    url: "https://slack.com/webhook/predictions"
+    events: ["prediction.high_confidence", "anomaly.detected"]
+    
+  - name: "monitoring-alert"
+    url: "https://opsgenie.com/webhook/alerts"
+    events: ["system.error", "performance.degraded"]
