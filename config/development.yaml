@@ -1,0 +1,127 @@
+# Development configuration for AI Soccer Predictions
+
+environment: "development"
+
+# API Configuration
+api:
+  enable_docs: true
+  host: "127.0.0.1"
+  port: 8000
+  workers: 1
+  cors_origins: ["*"]
+  rate_limits:
+    default: [1000, 3600]  # Relaxed for development
+    predictions: [500, 3600]
+    training: [20, 86400]
+  auth:
+    api_keys: ["dev_api_key_123"]
+    require_auth: false
+
+# Logging Configuration
+logging:
+  level: "DEBUG"
+  json_format: false
+  log_file: "logs/development.log"
+  max_file_size: 10485760  # 10MB
+  backup_count: 3
+
+# AI Agents Configuration
+agents:
+  synthetic_intelligence:
+    enabled: true
+    num_simulations: 1000  # Reduced for development
+    data_augmentation: true
+    gan_training:
+      epochs: 100  # Reduced for development
+      batch_size: 32
+      learning_rate: 0.0002
+  
+  strategic_intelligence:
+    enabled: true
+    knowledge_graph_update_frequency: "1h"
+    context_analysis_depth: "basic"
+  
+  data_collector:
+    enabled: true
+    sources:
+      hollywoodbets:
+        enabled: true
+        test_mode: true  # Use test data
+      betway:
+        enabled: true
+        test_mode: true
+      football_data:
+        enabled: true
+        test_mode: true
+  
+  prediction_ensemble:
+    enabled: true
+    models:
+      transformer:
+        enabled: true
+        weight: 0.4
+      lstm:
+        enabled: true
+        weight: 0.3
+      poisson:
+        enabled: true
+        weight: 0.3
+    test_mode: true
+
+# Model Configuration
+models:
+  ensemble:
+    enabled: true
+    members:
+      - transformer
+      - lstm
+      - poisson
+  
+  transformer:
+    hidden_dim: 256  # Reduced for development
+    num_heads: 4
+    num_layers: 2
+    dropout: 0.1
+  
+  training:
+    batch_size: 16
+    learning_rate: 0.001
+    epochs: 10  # Reduced for development
+    early_stopping_patience: 3
+
+# Data Configuration
+data:
+  sources:
+    - test_data
+    - sample_data
+  features:
+    basic_stats: true
+    advanced_metrics: false  # Simplified for development
+    contextual_factors: true
+  sample_size: 1000  # Use smaller dataset
+
+# Database Configuration (Development)
+database:
+  url: "sqlite:///./dev_soccer_predictions.db"
+  echo: true  # Show SQL queries
+  pool_size: 5
+  max_overflow: 10
+
+# Cache Configuration (Development)
+cache:
+  enabled: true
+  backend: "memory"
+  default_timeout: 300
+
+# Monitoring and Metrics (Development)
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 60
+
+# Development-specific settings
+development:
+  hot_reload: true
+  debug: true
+  test_data: true
+  mock_external_apis: true
