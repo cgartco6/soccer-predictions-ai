@@ -1,0 +1,242 @@
+# Default configuration for AI Soccer Predictions
+
+environment: "development"
+
+# API Configuration
+api:
+  enable_docs: true
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  cors_origins: 
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+    - "https://soccer-predictions.com"
+  rate_limits:
+    default: [100, 3600]  # 100 requests per hour
+    predictions: [50, 3600]  # 50 predictions per hour
+    training: [5, 86400]  # 5 training jobs per day
+  auth:
+    api_keys: []
+    require_auth: false
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  json_format: false
+  log_file: "logs/soccer_predictions.log"
+  max_file_size: 104857600  # 100MB
+  backup_count: 5
+
+# AI Agents Configuration
+agents:
+  synthetic_intelligence:
+    enabled: true
+    num_simulations: 10000
+    data_augmentation: true
+    gan_training:
+      epochs: 1000
+      batch_size: 64
+      learning_rate: 0.0002
+      latent_dim: 100
+    transformer:
+      model_name: "microsoft/deberta-v3-base"
+    simulation:
+      monte_carlo_iterations: 10000
+  
+  strategic_intelligence:
+    enabled: true
+    knowledge_graph_update_frequency: "24h"
+    context_analysis_depth: "deep"
+    strategy:
+      tactical_analysis_depth: "detailed"
+      motivational_analysis: true
+    tactics:
+      formation_analysis: true
+      style_analysis: true
+  
+  data_collector:
+    enabled: true
+    sources:
+      hollywoodbets:
+        enabled: true
+        base_url: "https://www.hollywoodbets.net"
+        rate_limit: 10  # requests per minute
+      betway:
+        enabled: true
+        base_url: "https://www.betway.co.za"
+        rate_limit: 10
+      football_data:
+        enabled: true
+        base_url: "https://api.football-data.org/v4"
+        rate_limit: 10
+      weather:
+        enabled: true
+        base_url: "https://api.openweathermap.org/data/2.5"
+        rate_limit: 60
+  
+  prediction_ensemble:
+    enabled: true
+    models:
+      transformer:
+        enabled: true
+        weight: 0.35
+      lstm:
+        enabled: true
+        weight: 0.25
+      poisson:
+        enabled: true
+        weight: 0.15
+      elo:
+        enabled: true
+        weight: 0.15
+      bayesian:
+        enabled: true
+        weight: 0.10
+    combination_method: "weighted_average"
+    confidence_threshold: 0.6
+
+# Model Configuration
+models:
+  ensemble:
+    enabled: true
+    members:
+      - transformer
+      - lstm
+      - poisson
+      - elo
+      - bayesian
+    weights:
+      transformer: 0.35
+      lstm: 0.25
+      poisson: 0.15
+      elo: 0.15
+      bayesian: 0.10
+  
+  transformer:
+    hidden_dim: 512
+    num_heads: 8
+    num_layers: 6
+    dropout: 0.1
+    dim_feedforward: 2048
+    team_embedding_dim: 64
+    player_embedding_dim: 32
+    context_dim: 128
+    num_teams: 500
+    num_formations: 50
+    num_leagues: 30
+  
+  lstm:
+    input_size: 256
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    bidirectional: true
+    attention_heads: 4
+  
+  training:
+    batch_size: 32
+    learning_rate: 0.001
+    epochs: 100
+    early_stopping_patience: 10
+    validation_split: 0.2
+    test_split: 0.1
+
+# Data Configuration
+data:
+  sources:
+    - football_data_api
+    - hollywoodbets
+    - betway
+    - weather_api
+    - injury_data
+  
+  features:
+    basic_stats: true
+    advanced_metrics: true
+    contextual_factors: true
+    player_tracking: false
+    tactical_analysis: true
+  
+  update_frequency: "1h"
+  retention_period: "365d"  # 1 year
+  backup_enabled: true
+
+# Feature Engineering
+features:
+  team_strength:
+    elo_ratings: true
+    form_ratings: true
+    home_advantage: true
+  contextual:
+    weather_impact: true
+    venue_impact: true
+    fatigue_factors: true
+  advanced:
+    expected_goals: true
+    possession_efficiency: true
+    defensive_solidity: true
+
+# Database Configuration
+database:
+  url: "sqlite:///./soccer_predictions.db"
+  echo: false
+  pool_size: 20
+  max_overflow: 30
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# Cache Configuration
+cache:
+  enabled: true
+  backend: "redis"  # or "memory"
+  redis_url: "redis://localhost:6379/0"
+  default_timeout: 3600  # 1 hour
+  prediction_cache_timeout: 300  # 5 minutes
+
+# Monitoring and Metrics
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 60
+  performance_metrics: true
+  prediction_tracking: true
+
+# Model Registry
+model_registry:
+  storage: "local"  # or "s3", "gcs"
+  local_path: "models/trained_models"
+  versioning: true
+  auto_update: true
+
+# External Services
+services:
+  football_data_api:
+    base_url: "https://api.football-data.org/v4"
+    api_key: "${FOOTBALL_DATA_API_KEY}"
+  
+  openweather_api:
+    base_url: "https://api.openweathermap.org/data/2.5"
+    api_key: "${OPENWEATHER_API_KEY}"
+  
+  hollywoodbets:
+    base_url: "https://www.hollywoodbets.net"
+    proxies: []
+  
+  betway:
+    base_url: "https://www.betway.co.za"
+    api_enabled: true
+
+# Security
+security:
+  api_key_rotation: "30d"
+  rate_limiting: true
+  request_logging: true
+  data_encryption: false
+
+# Performance
+performance:
+  prediction_timeout: 30
+  training_timeout: 3600
+  max_concurrent_predictions: 100
+  max_concurrent_training: 2
