@@ -1,0 +1,136 @@
+name: Model Training Pipeline
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Every Monday at 2 AM
+  workflow_dispatch:
+    inputs:
+      model_type:
+        description: 'Model type to train'
+        required: true
+        default: 'ensemble'
+      retrain_all:
+        description: 'Retrain all models'
+        type: boolean
+        default: false
+
+env:
+  PYTHON_VERSION: '3.10'
+  MODEL_REGISTRY: 'models/trained_models'
+
+jobs:
+  data-collection:
+    runs-on: ubuntu-latest
+    outputs:
+      new_data: ${{ steps.check-data.outputs.new_data }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Collect new data
+      run: |
+        python scripts/data_pipeline.py --collect --source all
+      env:
+        HOLLYWOODBETS_PROXY: ${{ secrets.HOLLYWOODBETS_PROXY }}
+        BETWAY_API_KEY: ${{ secrets.BETWAY_API_KEY }}
+        FOOTBALL_DATA_API: ${{ secrets.FOOTBALL_DATA_API }}
+    
+    - name: Check for new data
+      id: check-data
+      run: |
+        python scripts/check_new_data.py
+        echo "new_data=true" >> $GITHUB_OUTPUT
+
+  preprocess-data:
+    runs-on: ubuntu-latest
+    needs: data-collection
+    if: needs.data-collection.outputs.new_data == 'true'
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Preprocess data
+      run: |
+        python scripts/data_pipeline.py --preprocess --augment
+      env:
+        DATA_PATH: 'data/raw'
+        PROCESSED_PATH: 'data/processed'
+
+  train-models:
+    runs-on: ubuntu-latest
+    needs: preprocess-data
+    strategy:
+      matrix:
+        model: [transformer, lstm, ensemble, statistical]
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Train ${{ matrix.model }} model
+      run: |
+        python scripts/train_models.py --model ${{ matrix.model }} --config config/model_configs/${{ matrix.model }}_config.yaml
+      env:
+        CUDA_VISIBLE_DEVICES: 0
+        MODEL_SAVE_PATH: ${{ env.MODEL_REGISTRY }}
+    
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.model }}-model
+        path: ${{ env.MODEL_REGISTRY }}/${{ matrix.model }}_*.pkl
+        retention-days: 7
+
+  evaluate-models:
+    runs-on: ubuntu-latest
+    needs: train-models
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Download model artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ${{ env.MODEL_REGISTRY }}
+    
+    - name: Evaluate models
+      run: |
+        python scripts/evaluate_models.py --all --output results/evaluation_${{ github.run_id }}.json
+    
+    - name: Upload evaluation results
+      uses: actions/upload-artifact@v4
+      with:
+        name: evaluation-results
+        path: results/evaluation_${{ github.run_id }}.json
+
+  update-registry:
+    runs-on: ubuntu-latest
+    needs: evaluate-models
+    if: success()
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update model registry
+      run: |
+        python scripts/update_registry.py --evaluation-file results/evaluation_${{ github.run_id }}.json
+      env:
+        MODEL_REGISTRY_URL: ${{ secrets.MODEL_REGISTRY_URL }}
