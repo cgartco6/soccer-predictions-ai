@@ -1,0 +1,104 @@
+# Ensemble Model Configuration
+
+model_type: "ensemble"
+
+# Member Models
+members:
+  - name: "transformer"
+    type: "neural_network"
+    weight: 0.35
+    config: "transformer_config.yaml"
+    enabled: true
+  
+  - name: "lstm"
+    type: "neural_network" 
+    weight: 0.25
+    config: "lstm_config.yaml"
+    enabled: true
+  
+  - name: "poisson"
+    type: "statistical"
+    weight: 0.15
+    config: "poisson_config.yaml"
+    enabled: true
+  
+  - name: "elo"
+    type: "statistical"
+    weight: 0.15
+    config: "elo_config.yaml"
+    enabled: true
+  
+  - name: "bayesian"
+    type: "statistical"
+    weight: 0.10
+    config: "bayesian_config.yaml"
+    enabled: true
+
+# Combination Methods
+combination_method: "weighted_average"  # Options: weighted_average, stacking, voting
+stacking_meta_learner: "logistic_regression"
+
+# Weight Calculation
+weight_calculation: "performance_based"  # Options: fixed, performance_based, adaptive
+performance_metric: "accuracy"
+weight_update_frequency: "7d"  # Update weights weekly
+
+# Confidence Calculation
+confidence_method: "probability_based"  # Options: probability_based, agreement_based
+min_confidence: 0.3
+max_confidence: 0.95
+
+# Member Selection
+dynamic_member_selection: true
+selection_criteria:
+  - "recent_performance"
+  - "prediction_confidence" 
+  - "feature_coverage"
+min_members: 3
+max_members: 7
+
+# Fallback Strategy
+fallback_enabled: true
+primary_fallback: "transformer"
+secondary_fallback: "poisson"
+
+# Performance Optimization
+parallel_inference: true
+batch_size: 64
+cache_predictions: true
+cache_ttl: 300  # 5 minutes
+
+# Monitoring
+monitor_member_performance: true
+performance_update_frequency: "1h"
+degradation_threshold: 0.05  # 5% performance drop
+
+# Feature Requirements
+feature_requirements:
+  transformer:
+    required: ["team_embeddings", "sequence_data"]
+    optional: ["context_features"]
+  
+  lstm:
+    required: ["sequence_data", "temporal_features"]
+    optional: ["static_features"]
+  
+  poisson:
+    required: ["historical_goals", "team_strength"]
+    optional: ["form_factors"]
+  
+  elo:
+    required: ["team_ratings", "match_history"]
+    optional: ["home_advantage"]
+  
+  bayesian:
+    required: ["historical_data", "team_hierarchies"]
+    optional: ["contextual_priors"]
+
+# Output Configuration
+output:
+  probabilities: true
+  confidence_scores: true
+  member_contributions: true
+  explanation: true
+  feature_importance: true
