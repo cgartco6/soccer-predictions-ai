@@ -1,0 +1,65 @@
+# AI Agents Configuration
+agents:
+  synthetic_intelligence:
+    enabled: true
+    num_simulations: 10000
+    data_augmentation: true
+    gan_training:
+      epochs: 1000
+      batch_size: 64
+      learning_rate: 0.0002
+  
+  strategic_intelligence:
+    enabled: true
+    knowledge_graph_update_frequency: "24h"
+    context_analysis_depth: "deep"
+    
+# Model Configuration
+models:
+  ensemble:
+    enabled: true
+    members:
+      - transformer
+      - lstm
+      - statistical
+    weights:
+      transformer: 0.5
+      lstm: 0.3
+      statistical: 0.2
+  
+  transformer:
+    hidden_dim: 512
+    num_heads: 8
+    num_layers: 6
+    dropout: 0.1
+    team_embedding_dim: 64
+    
+  training:
+    batch_size: 32
+    learning_rate: 0.001
+    epochs: 100
+    early_stopping_patience: 10
+
+# Data Configuration
+data:
+  sources:
+    - api_football
+    - stats_bomb
+    - whoscored
+    - custom_scrapers
+  
+  features:
+    basic_stats: true
+    advanced_metrics: true
+    contextual_factors: true
+    player_tracking: false
+    
+  update_frequency: "1h"
+
+# API Configuration
+api:
+  version: "1.0.0"
+  rate_limit: "100/hour"
+  authentication: true
+  cors_origins:
+    - "https://prediction-dashboard.com"
