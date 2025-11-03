@@ -1,0 +1,45 @@
+name: Model Training
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Every Monday at 2 AM
+  workflow_dispatch:
+    inputs:
+      model_type:
+        description: 'Model type to train'
+        required: true
+        default: 'ensemble'
+
+jobs:
+  train-model:
+    runs-on: ubuntu-latest
+    environment: training
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Train model
+      run: |
+        python scripts/train_models.py --model-type ${{ inputs.model_type }}
+      env:
+        DATA_API_KEY: ${{ secrets.DATA_API_KEY }}
+        MODEL_REGISTRY: ${{ secrets.MODEL_REGISTRY }}
+    
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-models
+        path: models/trained_models/
+        
+    - name: Update model registry
+      run: |
+        python scripts/update_registry.py
