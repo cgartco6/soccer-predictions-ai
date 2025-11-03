@@ -1,0 +1,136 @@
+# Test configuration for AI Soccer Predictions
+
+environment: "testing"
+
+# API Configuration
+api:
+  enable_docs: true
+  cors_origins: ["http://localhost:3000", "http://127.0.0.1:3000"]
+  rate_limits:
+    default: [100, 3600]  # 100 requests per hour
+    predictions: [50, 3600]  # 50 predictions per hour
+    training: [5, 86400]  # 5 training jobs per day
+  auth:
+    api_keys: ["test_api_key_123", "test_api_key_456"]
+
+# Logging Configuration
+logging:
+  level: "DEBUG"
+  json_format: false
+  log_file: "logs/test.log"
+
+# AI Agents Configuration
+agents:
+  synthetic_intelligence:
+    enabled: true
+    num_simulations: 1000  # Reduced for testing
+    data_augmentation: true
+    gan_training:
+      epochs: 10  # Reduced for testing
+      batch_size: 16
+      learning_rate: 0.0002
+  
+  strategic_intelligence:
+    enabled: true
+    knowledge_graph_update_frequency: "1h"
+    context_analysis_depth: "basic"
+  
+  data_collector:
+    enabled: true
+    sources:
+      hollywoodbets:
+        enabled: true
+        test_mode: true
+      betway:
+        enabled: true
+        test_mode: true
+      football_data:
+        enabled: true
+        test_mode: true
+  
+  prediction_ensemble:
+    enabled: true
+    models:
+      transformer:
+        enabled: true
+        test_mode: true
+      lstm:
+        enabled: true
+        test_mode: true
+      poisson:
+        enabled: true
+        test_mode: true
+      elo:
+        enabled: true
+        test_mode: true
+      bayesian:
+        enabled: true
+        test_mode: true
+
+# Model Configuration
+models:
+  ensemble:
+    enabled: true
+    members:
+      - transformer
+      - lstm
+      - poisson
+    weights:
+      transformer: 0.4
+      lstm: 0.3
+      poisson: 0.3
+  
+  transformer:
+    hidden_dim: 256  # Reduced for testing
+    num_heads: 4
+    num_layers: 2
+    dropout: 0.1
+    team_embedding_dim: 32
+  
+  training:
+    batch_size: 16
+    learning_rate: 0.001
+    epochs: 5  # Reduced for testing
+    early_stopping_patience: 3
+
+# Data Configuration
+data:
+  sources:
+    - test_data
+    - fixtures
+  
+  features:
+    basic_stats: true
+    advanced_metrics: true
+    contextual_factors: true
+    player_tracking: false
+  
+  test_data_path: "tests/fixtures/"
+  sample_size: 1000
+
+# Database Configuration (Test Database)
+database:
+  test_url: "sqlite:///./test_soccer_predictions.db"
+  echo: false
+  pool_size: 5
+  max_overflow: 10
+
+# Cache Configuration
+cache:
+  enabled: true
+  backend: "memory"
+  default_timeout: 300  # 5 minutes
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  metrics_port: 9091
+  health_check_interval: 30
+
+# Test-specific settings
+testing:
+  use_mocks: true
+  mock_odds: true
+  fast_training: true
+  reduced_data: true
+  prediction_timeout: 30
