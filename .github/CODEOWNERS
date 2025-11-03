@@ -1,0 +1,20 @@
+# Core AI models
+/src/agents/ @ai-team @ml-leads
+/src/models/ @ai-team @ml-leads
+/src/feature_engineers/ @ai-team @data-scientists
+
+# Data pipelines
+/src/data/ @data-engineers @data-scientists
+/scripts/data_pipeline.py @data-engineers
+
+# API and deployment
+/src/api/ @backend-team @devops
+/docker/ @devops
+/.github/workflows/ @devops
+
+# Documentation
+/docs/ @tech-writers @ai-team
+/notebooks/ @data-scientists
+
+# Configuration
+/config/ @ai-team @devops
