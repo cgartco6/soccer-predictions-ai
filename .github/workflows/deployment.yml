@@ -1,0 +1,94 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOCKER_IMAGE: soccer-predictions-api
+  DEPLOY_ENV: production
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build Docker image
+      run: |
+        docker build -t $DOCKER_IMAGE:${{ github.sha }} -f docker/Dockerfile.api .
+    
+    - name: Run tests
+      run: |
+        docker run $DOCKER_IMAGE:${{ github.sha }} pytest tests/ -v
+    
+    - name: Scan for vulnerabilities
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: $DOCKER_IMAGE:${{ github.sha }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    environment: staging
+    
+    steps:
+    - name: Deploy to staging
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USER }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        script: |
+          cd /opt/soccer-predictions
+          git pull origin main
+          docker-compose down
+          docker-compose up -d --build
+          docker system prune -f
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment: staging
+    
+    steps:
+    - name: Run integration tests
+      run: |
+        curl -X GET "${{ secrets.STAGING_URL }}/health"
+        python scripts/integration_test.py --url ${{ secrets.STAGING_URL }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    if: success()
+    environment: production
+    
+    steps:
+    - name: Deploy to production
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PRODUCTION_HOST }}
+        username: ${{ secrets.PRODUCTION_USER }}
+        key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        script: |
+          cd /opt/soccer-predictions
+          git pull origin main
+          docker-compose down
+          docker-compose up -d --build
+          docker system prune -f
+    
+    - name: Run health checks
+      run: |
+        sleep 30
+        curl -f ${{ secrets.PRODUCTION_URL }}/health || exit 1
+    
+    - name: Notify deployment
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: 🚀 Soccer Predictions API deployed to production
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
