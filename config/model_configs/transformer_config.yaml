@@ -1,0 +1,97 @@
+# Transformer Model Configuration
+
+model_type: "transformer"
+
+# Architecture Parameters
+hidden_dim: 512
+num_heads: 8
+num_layers: 6
+dim_feedforward: 2048
+dropout: 0.1
+activation: "relu"
+
+# Embedding Dimensions
+team_embedding_dim: 64
+player_embedding_dim: 32
+formation_embedding_dim: 16
+league_embedding_dim: 8
+context_embedding_dim: 128
+
+# Vocabulary Sizes
+num_teams: 500
+num_players: 20000
+num_formations: 50
+num_leagues: 30
+num_venues: 100
+
+# Input Dimensions
+sequence_length: 10  # Last 10 matches for sequence
+feature_dim: 256
+context_dim: 128
+
+# Training Parameters
+batch_size: 32
+learning_rate: 0.001
+weight_decay: 0.01
+warmup_steps: 1000
+max_grad_norm: 1.0
+
+# Optimization
+optimizer: "adamw"
+scheduler: "cosine"
+label_smoothing: 0.1
+
+# Regularization
+dropout: 0.1
+attention_dropout: 0.1
+layer_norm_eps: 1e-12
+
+# Output Heads
+score_prediction:
+  hidden_layers: [256, 128]
+  activation: "softmax"
+  output_dim: 3  # home_win, draw, away_win
+
+goal_prediction:
+  hidden_layers: [256, 128]
+  activation: "relu"
+  output_dim: 2  # home_goals, away_goals
+
+# Feature Configuration
+features:
+  categorical:
+    - "home_team"
+    - "away_team"
+    - "league"
+    - "venue"
+    - "referee"
+  
+  numerical:
+    - "home_elo"
+    - "away_elo"
+    - "home_recent_form"
+    - "away_recent_form"
+    - "attendance"
+    - "temperature"
+  
+  sequence:
+    - "previous_results"
+    - "goal_sequences"
+    - "form_sequences"
+
+# Preprocessing
+preprocessing:
+  normalize_numerical: true
+  encode_categorical: true
+  handle_missing: "median"
+  sequence_padding: "pre"
+
+# Performance Settings
+use_amp: true  # Automatic Mixed Precision
+gradient_accumulation: 1
+early_stopping_patience: 10
+
+# Model Saving
+save_best_only: true
+metric: "val_loss"
+mode: "min"
