@@ -1,0 +1,47 @@
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # Maintain dependencies for pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
+    open-pull-requests-limit: 10
+    versioning-strategy: "auto"
+    ignore:
+      - dependency-name: "torch"
+        versions: [">=2.0.0"]
+      - dependency-name: "transformers"
+        versions: [">=4.30.0"]
+
+  # Maintain dependencies for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  # Security updates
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "security"
+      - "dependencies"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "direct"
