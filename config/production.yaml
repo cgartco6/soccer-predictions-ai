@@ -1,0 +1,177 @@
+# Production configuration for AI Soccer Predictions
+
+environment: "production"
+
+# API Configuration
+api:
+  enable_docs: false
+  host: "0.0.0.0"
+  port: 8000
+  workers: 8
+  cors_origins:
+    - "https://soccer-predictions.com"
+    - "https://www.soccer-predictions.com"
+  rate_limits:
+    default: [1000, 3600]  # 1000 requests per hour
+    predictions: [500, 3600]  # 500 predictions per hour
+    training: [10, 86400]  # 10 training jobs per day
+  auth:
+    api_keys: []
+    require_auth: true
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  json_format: true
+  log_file: "/var/log/soccer_predictions/app.log"
+  max_file_size: 1073741824  # 1GB
+  backup_count: 10
+
+# AI Agents Configuration
+agents:
+  synthetic_intelligence:
+    enabled: true
+    num_simulations: 50000
+    data_augmentation: true
+    gan_training:
+      epochs: 5000
+      batch_size: 128
+      learning_rate: 0.0001
+      latent_dim: 256
+  
+  strategic_intelligence:
+    enabled: true
+    knowledge_graph_update_frequency: "6h"
+    context_analysis_depth: "comprehensive"
+  
+  data_collector:
+    enabled: true
+    sources:
+      hollywoodbets:
+        enabled: true
+        rate_limit: 5  # Conservative rate limiting
+        proxies: ["proxy1:8080", "proxy2:8080"]
+      betway:
+        enabled: true
+        rate_limit: 5
+        use_api: true
+      football_data:
+        enabled: true
+        rate_limit: 10
+  
+  prediction_ensemble:
+    enabled: true
+    models:
+      transformer:
+        enabled: true
+        weight: 0.40
+      lstm:
+        enabled: true
+        weight: 0.25
+      poisson:
+        enabled: true
+        weight: 0.15
+      elo:
+        enabled: true
+        weight: 0.12
+      bayesian:
+        enabled: true
+        weight: 0.08
+    confidence_threshold: 0.7
+
+# Model Configuration
+models:
+  ensemble:
+    enabled: true
+    members:
+      - transformer
+      - lstm
+      - poisson
+      - elo
+      - bayesian
+  
+  transformer:
+    hidden_dim: 1024
+    num_heads: 16
+    num_layers: 12
+    dropout: 0.1
+    dim_feedforward: 4096
+  
+  training:
+    batch_size: 64
+    learning_rate: 0.0005
+    epochs: 200
+    early_stopping_patience: 15
+
+# Data Configuration
+data:
+  sources:
+    - football_data_api
+    - hollywoodbets
+    - betway
+    - weather_api
+    - injury_data
+    - transfer_data
+  
+  update_frequency: "30m"  # More frequent updates in production
+  retention_period: "730d"  # 2 years
+  backup_enabled: true
+
+# Database Configuration (Production)
+database:
+  url: "postgresql://user:pass@localhost/soccer_predictions"
+  echo: false
+  pool_size: 50
+  max_overflow: 100
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# Cache Configuration (Production)
+cache:
+  enabled: true
+  backend: "redis"
+  redis_url: "redis://redis-server:6379/0"
+  default_timeout: 7200  # 2 hours
+  prediction_cache_timeout: 600  # 10 minutes
+
+# Monitoring and Metrics (Production)
+monitoring:
+  enabled: true
+  metrics_port: 9090
+  health_check_interval: 30
+  performance_metrics: true
+  prediction_tracking: true
+  alerting: true
+
+# Model Registry (Production)
+model_registry:
+  storage: "s3"
+  s3_bucket: "soccer-predictions-models"
+  versioning: true
+  auto_update: true
+
+# Security (Production)
+security:
+  api_key_rotation: "7d"
+  rate_limiting: true
+  request_logging: true
+  data_encryption: true
+
+# Performance (Production)
+performance:
+  prediction_timeout: 10
+  training_timeout: 7200
+  max_concurrent_predictions: 1000
+  max_concurrent_training: 5
+
+# External Services (Production)
+services:
+  football_data_api:
+    base_url: "https://api.football-data.org/v4"
+    api_key: "${FOOTBALL_DATA_API_KEY}"
+  
+  openweather_api:
+    base_url: "https://api.openweathermap.org/data/2.5"
+    api_key: "${OPENWEATHER_API_KEY}"
+  
+  # Add production-specific service configurations
