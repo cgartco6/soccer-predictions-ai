@@ -35,7 +35,7 @@ jobs:
         python scripts/generate_report.py --output reports/monitoring_${{ github.run_id }}.html
     
     - name: Upload monitoring report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: monitoring-report
         path: reports/monitoring_${{ github.run_id }}.html
