@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Soccer Predictions</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>⚽ AI Soccer Predictions</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#predictions">Today's Predictions</a>
+                <a href="#compare">Compare Odds</a>
+                <a href="#custom">Custom Prediction</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Real-time Odds Section -->
+        <section id="odds-comparison" class="section">
+            <h2>📊 Today's Matches & Odds</h2>
+            <div class="odds-grid" id="oddsContainer">
+                <!-- Dynamic content from JavaScript -->
+            </div>
+        </section>
+
+        <!-- AI Prediction Section -->
+        <section id="ai-predictions" class="section">
+            <h2>🤖 AI Predictions Analysis</h2>
+            <div class="prediction-cards" id="predictionContainer">
+                <!-- Dynamic AI predictions -->
+            </div>
+        </section>
+
+        <!-- Custom Prediction Form -->
+        <section id="custom-prediction" class="section">
+            <h2>🎯 Custom Match Prediction</h2>
+            <div class="prediction-form">
+                <form id="customPredictionForm">
+                    <div class="form-group">
+                        <label for="homeTeam">Home Team:</label>
+                        <input type="text" id="homeTeam" required 
+                               placeholder="Enter home team name">
+                    </div>
+                    <div class="form-group">
+                        <label for="awayTeam">Away Team:</label>
+                        <input type="text" id="awayTeam" required 
+                               placeholder="Enter away team name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="league">League:</label>
+                            <select id="league">
+                                <option value="premier_league">Premier League</option>
+                                <option value="la_liga">La Liga</option>
+                                <option value="serie_a">Serie A</option>
+                                <option value="bundesliga">Bundesliga</option>
+                                <option value="ligue_1">Ligue 1</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="venue">Venue:</label>
+                            <input type="text" id="venue" placeholder="Stadium name">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-predict">
+                        Generate AI Prediction
+                    </button>
+                </form>
+                <div id="customPredictionResult" class="prediction-result">
+                    <!-- Custom prediction results will appear here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Factors Visualization -->
+        <section id="factors-analysis" class="section">
+            <h2>🔍 Prediction Factors Analysis</h2>
+            <div class="factors-grid">
+                <div class="factor-card">
+                    <h3>Player Performance</h3>
+                    <div class="factor-chart">
+                        <canvas id="playerPerformanceChart"></canvas>
+                    </div>
+                </div>
+                <div class="factor-card">
+                    <h3>Team Dynamics</h3>
+                    <div class="factor-chart">
+                        <canvas id="teamDynamicsChart"></canvas>
+                    </div>
+                </div>
+                <div class="factor-card">
+                    <h3>External Factors</h3>
+                    <div class="factor-chart">
+                        <canvas id="externalFactorsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 AI Soccer Predictions. Powered by Synthetic & Strategic Intelligence</p>
+            <div class="ai-badges">
+                <span class="badge">🤖 Synthetic AI</span>
+                <span class="badge">🎯 Strategic AI</span>
+                <span class="badge">🔍 AI Agents</span>
+                <span class="badge">💡 AI Helpers</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/predictions.js"></script>
+    <script src="js/realtime.js"></script>
+</body>
+</html>
