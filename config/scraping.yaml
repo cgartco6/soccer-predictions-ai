@@ -1,0 +1,42 @@
+scraping:
+  hollywoodbets:
+    enabled: true
+    interval: 300  # 5 minutes
+    retry_attempts: 3
+    proxies:
+      - proxy1.example.com:8080
+      - proxy2.example.com:8080
+  
+  betway:
+    enabled: true
+    interval: 300
+    use_api: true
+    api_key: ${BETWAY_API_KEY}
+  
+  rate_limiting:
+    requests_per_minute: 60
+    delay_between_requests: 1.0
+
+features:
+  player_performance:
+    enabled: true
+    data_sources:
+      - whoscored
+      - statsbomb
+      - fotmob
+  
+  weather_integration:
+    enabled: true
+    api_key: ${WEATHER_API_KEY}
+    factors:
+      - temperature
+      - precipitation
+      - wind_speed
+      - humidity
+  
+  injury_analysis:
+    enabled: true
+    sources:
+      - premier_league_injuries
+      - transfermarkt
+      - team_news
