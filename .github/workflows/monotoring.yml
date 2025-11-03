@@ -1,0 +1,41 @@
+name: Model Monitoring
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  model-monitoring:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Run model monitoring
+      run: |
+        python scripts/monitor_performance.py --check-all --alert
+      env:
+        MODEL_REGISTRY: ${{ secrets.MODEL_REGISTRY }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    
+    - name: Generate monitoring report
+      run: |
+        python scripts/generate_report.py --output reports/monitoring_${{ github.run_id }}.html
+    
+    - name: Upload monitoring report
+      uses: actions/upload-artifact@v4
+      with:
+        name: monitoring-report
+        path: reports/monitoring_${{ github.run_id }}.html
