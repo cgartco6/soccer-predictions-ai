@@ -27,7 +27,7 @@ mkdocstrings[python]==0.23.0
 mkdocs-jupyter==0.24.1
 
 # Development Tools
-jupyter==1.0.0
+jupyter==1.1.1
 ipython==8.17.2
 ipdb==0.13.13
 autopep8==2.0.4
