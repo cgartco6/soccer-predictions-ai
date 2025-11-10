@@ -74,4 +74,4 @@ pandera==0.18.0
 
 # feature engineering
 category-encoders==2.6.3
-imbalanced-learn==0.10.1
+imbalanced-learn==0.14.0
