@@ -38,7 +38,7 @@ structlog==23.2.0
 
 # Configuration
 pyyaml==6.0.1
-python-dotenv==1.0.0
+python-dotenv==1.2.1
 
 # Utilities
 click==8.1.7
