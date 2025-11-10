@@ -91,7 +91,7 @@ jobs:
         MODEL_SAVE_PATH: ${{ env.MODEL_REGISTRY }}
     
     - name: Upload model artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.model }}-model
         path: ${{ env.MODEL_REGISTRY }}/${{ matrix.model }}_*.pkl
@@ -117,7 +117,7 @@ jobs:
         python scripts/evaluate_models.py --all --output results/evaluation_${{ github.run_id }}.json
     
     - name: Upload evaluation results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: evaluation-results
         path: results/evaluation_${{ github.run_id }}.json
