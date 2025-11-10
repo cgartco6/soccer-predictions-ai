@@ -73,5 +73,5 @@ rich==13.7.0
 pandera==0.18.0
 
 # feature engineering
-category-encoders==2.6.3
+category-encoders==2.8.1
 imbalanced-learn==0.10.1
