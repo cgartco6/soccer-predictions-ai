@@ -108,7 +108,7 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
     
     - name: Download model artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         path: ${{ env.MODEL_REGISTRY }}
     
