@@ -56,7 +56,7 @@ safety==2.3.5
 
 # Database Tools
 sqlacodegen==3.0.0rc2
-alembic==1.12.1
+alembic==1.17.1
 
 # Containerization
 docker==6.1.3

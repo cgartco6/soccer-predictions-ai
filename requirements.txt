@@ -24,7 +24,7 @@ requests==2.31.0
 
 # Database & ORM
 sqlalchemy==2.0.23
-alembic==1.12.1
+alembic==1.17.1
 psycopg2-binary==2.9.9
 aiosqlite==0.19.0
 
